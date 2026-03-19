@@ -17,7 +17,7 @@ namespace ProductsApi.Controllers
             return Ok();
         }
 
-        
+
         [HttpGet("{id}")]
         public IActionResult GetProduct(int id)
         {
