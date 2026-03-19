@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using ProductsApi.Models;
 
 namespace ProductsApi.Controllers
 {
@@ -11,17 +13,37 @@ namespace ProductsApi.Controllers
 
     public class ProductController:ControllerBase
     {
-        [HttpGet]
-        public IActionResult GetProducts()
+        private readonly ProductContext _context;
+
+        public ProductController(ProductContext context)
         {
-            return Ok();
+            _context = context;
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetProducts()
+        {
+            var products = await _context.Products.ToListAsync();
+            return Ok(products);
         }
 
 
         [HttpGet("{id}")]
-        public IActionResult GetProduct(int id)
+        public async Task<IActionResult> GetProduct(int? id)
         {
-            return Ok();
+            if(id == null)
+            {
+                return NotFound();
+            }
+
+            var p = await _context.Products.FirstOrDefaultAsync(i=>i.ProductId == id);
+
+             if(p == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(p);
         }
     }
 }
