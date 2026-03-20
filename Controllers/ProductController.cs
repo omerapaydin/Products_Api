@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using ProductsApi.DTO;
 using ProductsApi.Models;
 
 namespace ProductsApi.Controllers
@@ -23,7 +24,12 @@ namespace ProductsApi.Controllers
         [HttpGet]
         public async Task<IActionResult> GetProducts()
         {
-            var products = await _context.Products.ToListAsync();
+            var products = await _context.Products.Select(p=> new ProductDTO
+            {
+                ProductId = p.ProductId,
+                ProductName = p.ProductName,
+                Price = p.Price
+            }).ToListAsync();
             return Ok(products);
         }
 
