@@ -1,3 +1,5 @@
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using ProductsApi.Models;
 
@@ -8,6 +10,19 @@ builder.Services.AddControllers();
 builder.Services.AddDbContext<ProductContext>(
     x => x.UseSqlite("Data Source=products.db")
 );
+
+builder.Services.Configure<IdentityOptions>(options=>{
+    options.Password.RequireLowercase = false;
+    options.Password.RequireUppercase = false;
+    options.Password.RequiredLength = 6;
+    options.Password.RequireNonAlphanumeric = false;  
+    options.User.RequireUniqueEmail = true;  
+    options.SignIn.RequireConfirmedEmail = true;
+});
+
+
+builder.Services.AddIdentity<AppUser,AppRole>()
+    .AddEntityFrameworkStores<ProductContext>();
 
 // swagger
 builder.Services.AddEndpointsApiExplorer();

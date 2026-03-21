@@ -156,3 +156,4 @@
 /Users/omerapaydin/Desktop/API/WebApiLearn/ProductsApi/obj/Debug/net9.0/ProductsApi.pdb
 /Users/omerapaydin/Desktop/API/WebApiLearn/ProductsApi/obj/Debug/net9.0/ProductsApi.genruntimeconfig.cache
 /Users/omerapaydin/Desktop/API/WebApiLearn/ProductsApi/obj/Debug/net9.0/ref/ProductsApi.dll
+/Users/omerapaydin/Desktop/API/WebApiLearn/ProductsApi/bin/Debug/net9.0/Microsoft.AspNetCore.Identity.EntityFrameworkCore.dll

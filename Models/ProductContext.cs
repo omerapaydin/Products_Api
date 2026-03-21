@@ -2,11 +2,12 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace ProductsApi.Models
 {
-    public class ProductContext:DbContext
+    public class ProductContext:IdentityDbContext<AppUser,AppRole,int>
     {
         public ProductContext(DbContextOptions<ProductContext> options):base(options)
         {
