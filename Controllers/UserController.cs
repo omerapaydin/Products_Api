@@ -15,11 +15,13 @@ namespace ProductsApi.Controllers
     {
         
 
-        private UserManager<AppUser> _userManager;
+        private readonly UserManager<AppUser> _userManager;
+        private readonly SignInManager<AppUser> _signInManager;
 
-        public UserController(UserManager<AppUser> userManager)
+        public UserController(UserManager<AppUser> userManager,SignInManager<AppUser> signInManager)
         {
             _userManager = userManager;
+            _signInManager = signInManager;
         }
 
         [HttpPost("register")]
@@ -39,7 +41,7 @@ namespace ProductsApi.Controllers
                 DateAdded = DateTime.Now
             };
 
-            var result = await _userManager.CreateAsync(user,model.Password);
+            var result = await _userManager.CreateAsync(user,model.Password!);
 
             if(result.Succeeded)
             {
@@ -48,6 +50,29 @@ namespace ProductsApi.Controllers
 
             return BadRequest(result.Errors);
         }
+
+
+
+        public async Task<IActionResult> Login(LoginDTO model)
+        {
+            var user = await _userManager.FindByEmailAsync(model.Email!);
+
+            if(user == null)
+            {
+                return BadRequest(new {message = "email hatalı"});
+            }
+
+            var result = await _signInManager.CheckPasswordSignInAsync(user,model.Password,false);
+
+            if(result.Succeeded)
+            {
+                return Ok(
+                    new { token = "token"}
+                );
+            }
+            return Unauthorized();
+        }
+
 
     }
 }

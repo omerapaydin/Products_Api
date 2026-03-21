@@ -18,6 +18,9 @@ builder.Services.Configure<IdentityOptions>(options=>{
     options.Password.RequireNonAlphanumeric = false;  
     options.User.RequireUniqueEmail = true;  
     options.SignIn.RequireConfirmedEmail = true;
+
+    options.Lockout.MaxFailedAccessAttempts = 5;
+    options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(5);
 });
 
 
