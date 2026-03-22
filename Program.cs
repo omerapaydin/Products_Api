@@ -1,6 +1,9 @@
+using System.Text;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using ProductsApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -23,6 +26,36 @@ builder.Services.Configure<IdentityOptions>(options=>{
     options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(5);
 });
 
+    builder.Services.AddAuthentication(x =>
+    {
+        x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+        x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+    })
+    .AddJwtBearer(x =>
+    {
+        x.RequireHttpsMetadata = false;
+
+        x.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuer = false,
+            ValidIssuer = "sadikturan.com",
+
+            ValidateAudience = false,
+            ValidAudience = "",
+            ValidAudiences = new string[] { "a", "b" },
+
+            ValidateIssuerSigningKey = true,
+
+            IssuerSigningKey = new SymmetricSecurityKey(
+                Encoding.ASCII.GetBytes(
+                    builder.Configuration.GetSection("AppSettings:Secret").Value ?? ""
+                )
+            ),
+
+            ValidateLifetime = true
+        };
+    });
+
 
 builder.Services.AddIdentity<AppUser,AppRole>()
     .AddEntityFrameworkStores<ProductContext>();
@@ -40,7 +73,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-
+app.UseAuthorization();
+app.UseAuthentication();
 app.MapControllers();
 
 app.Run();
