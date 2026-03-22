@@ -52,7 +52,7 @@ namespace ProductsApi.Controllers
         }
 
 
-
+        [HttpPost("login")]
         public async Task<IActionResult> Login(LoginDTO model)
         {
             var user = await _userManager.FindByEmailAsync(model.Email!);
@@ -67,12 +67,15 @@ namespace ProductsApi.Controllers
             if(result.Succeeded)
             {
                 return Ok(
-                    new { token = "token"}
+                    new { token = GenerateJWT(user)}
                 );
             }
             return Unauthorized();
         }
 
-
+        private object GenerateJWT(AppUser user)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
